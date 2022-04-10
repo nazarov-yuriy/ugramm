@@ -1,0 +1,17 @@
+services:
+  backend:
+    image: firefish/ugramm:0.1
+    ports:
+      - "5000:5000"
+    networks:
+      - ugramm
+
+  lt:
+    image: firefish/languagetool:5.7.0
+    networks:
+      ugramm:
+        aliases:
+          - lt
+
+networks:
+  ugramm: {}
