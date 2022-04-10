@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+import language_tool_python
 
 
 class Match:
@@ -73,11 +74,35 @@ class DummyEngine(BaseEngine):
         return res
 
 
+class LanguageToolEngine(BaseEngine):
+    def __init__(self):
+        self.lt = language_tool_python.LanguageTool('en-US', remote_server='http://lt:8081')  # ToDo: make configurable
+
+    @staticmethod
+    def name():
+        return "languagetool"
+
+    @staticmethod
+    def version():
+        return "languagetool 5.7.0"
+
+    def check(self, text: str) -> CheckResult:
+        res = CheckResult(self.version())
+        for match in self.lt.check(text):
+            if match.ruleId == "COMMA_COMPOUND_SENTENCE" and match.replacements and match.replacements[0][0] == ",":
+                res.matches.append(Match(
+                    match.offset, 0, quickfix=","
+                ))
+        res.fill_fixed(text)
+        return res
+
+
 class EngineFactory:
     def __init__(self):
         self.engines = {
             engine.name(): engine for engine in [
                 DummyEngine,
+                LanguageToolEngine,
             ]
         }
         self.cache = {}
