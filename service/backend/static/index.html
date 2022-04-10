@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>μGrammar</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+</head>
+<body>
+
+<div id="app"></div>
+<script>
+    'use strict';
+
+    const e = React.createElement;
+
+    class App extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                engine: "dummy",
+                text: "Don't need a consolidation agreement so we don't have to negotiate one.",
+                version: "",
+                matches: [],
+                fixed: ""
+            };
+        }
+
+        callCheck(_this) {
+            _this.setState({liked: true})
+            fetch("/api/v1/check?engine=" + _this.state.engine, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({"text": _this.state.text})
+            })
+                .then(res => res.json())
+                .then(
+                    res => _this.setState({fixed: res["fixed"], version: res["version"], matches: res["matches"]}),
+                    err => _this.setState({fixed: "#Error", version: "#Error", matches: "#Error"}),
+                )
+        }
+
+        render() {
+            let input = e(
+                "input",
+                {type: "text", value: this.state.text, onChange: (event) => this.setState({text: event.target.value})}
+            );
+            let engine = e(
+                "select", {value: this.state.engine, onChange: (event) => this.setState({engine: event.target.value})},
+                e("option", {value: "dummy"}, "dummy"),
+                e("option", {value: "languagetool"}, "languagetool"),
+                e("option", {value: "neural"}, "neural")
+            );
+            let btn = e(
+                "button",
+                {onClick: () => this.callCheck(this)},
+                "Check"
+            );
+            let fixed = e("p", {}, "Fixed: " + this.state.fixed);
+            let version = e("p", {}, "Version: " + this.state.version);
+            let matches = e("p", {}, "Matches: " + JSON.stringify(this.state.matches));
+            return e("div", {}, "Text to check:", input, "Engine:", engine, btn, fixed, version, matches);
+        }
+    }
+
+    const domContainer = document.querySelector("#app");
+    ReactDOM.render(e(App), domContainer);
+</script>
+
+</body>
+</html>

@@ -7,6 +7,11 @@ swagger = Swagger(app)
 engine_factory = EngineFactory()
 
 
+@app.route('/')
+def index():
+    return app.send_static_file("index.html")
+
+
 @app.route("/api/v1/check", methods=["POST"])
 def check():
     """
