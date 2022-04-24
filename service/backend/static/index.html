@@ -34,7 +34,10 @@
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({"text": _this.state.text})
             })
-                .then(res => {_this.setState({timings: res.headers.get("Server-Timing")}); return res.json()})
+                .then(res => {
+                    _this.setState({timings: res.headers.get("Server-Timing")});
+                    return res.json()
+                })
                 .then(
                     res => _this.setState({fixed: res["fixed"], version: res["version"], matches: res["matches"]}),
                     err => _this.setState({fixed: "#Error", version: "#Error", matches: "#Error"}),
@@ -43,8 +46,11 @@
 
         render() {
             let input = e(
-                "input",
-                {type: "text", value: this.state.text, onChange: (event) => this.setState({text: event.target.value})}
+                "textarea",
+                {
+                    cols: "80", rows: "5", value: this.state.text,
+                    onChange: (event) => this.setState({text: event.target.value})
+                }
             );
             let engine = e(
                 "select", {value: this.state.engine, onChange: (event) => this.setState({engine: event.target.value})},
@@ -64,7 +70,10 @@
             let version = e("p", {}, "Version: " + this.state.version);
             let matches = e("p", {}, "Matches: " + JSON.stringify(this.state.matches));
             let timings = e("p", {}, "Timings: " + this.state.timings);
-            return e("div", {}, "Text to check:", input, "Engine:", engine, btn, fixed, version, matches, timings);
+            return e(
+                "div", {}, "Text to check:", e("br"), input, e("br"),
+                "Engine:", engine, btn, fixed, version, matches, timings
+            );
         }
     }
 
