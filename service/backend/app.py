@@ -1,10 +1,23 @@
-from flask import Flask, request, jsonify
+from flask import g, Flask, request, jsonify
 from flasgger import Swagger
 from libs.engines import EngineFactory
+import time
 
 app = Flask(__name__)
 swagger = Swagger(app)
 engine_factory = EngineFactory()
+
+
+@app.before_request
+def before_request():
+    g.start = time.time()
+
+
+@app.after_request
+def after_request(response):
+    diff = time.time() - g.start
+    response.headers["Server-Timing"] = "total;dur=" + str(diff)
+    return response
 
 
 @app.route('/')

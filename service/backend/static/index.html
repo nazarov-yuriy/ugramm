@@ -22,7 +22,8 @@
                 text: "Don't need a consolidation agreement so we don't have to negotiate one.",
                 version: "",
                 matches: [],
-                fixed: ""
+                fixed: "",
+                timings: ""
             };
         }
 
@@ -33,7 +34,7 @@
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({"text": _this.state.text})
             })
-                .then(res => res.json())
+                .then(res => {_this.setState({timings: res.headers.get("Server-Timing")}); return res.json()})
                 .then(
                     res => _this.setState({fixed: res["fixed"], version: res["version"], matches: res["matches"]}),
                     err => _this.setState({fixed: "#Error", version: "#Error", matches: "#Error"}),
@@ -49,7 +50,10 @@
                 "select", {value: this.state.engine, onChange: (event) => this.setState({engine: event.target.value})},
                 e("option", {value: "dummy"}, "dummy"),
                 e("option", {value: "languagetool"}, "languagetool"),
-                e("option", {value: "neural"}, "neural")
+                e("option", {value: "nemo_punctuation_en_distilbert"}, "nemo_punctuation_en_distilbert"),
+                e("option", {value: "nemo_punctuation_en_bert"}, "nemo_punctuation_en_bert"),
+                e("option", {value: "comma_distil_roberta"}, "comma_distil_roberta"),
+                e("option", {value: "comma_roberta"}, "comma_roberta"),
             );
             let btn = e(
                 "button",
@@ -59,7 +63,8 @@
             let fixed = e("p", {}, "Fixed: " + this.state.fixed);
             let version = e("p", {}, "Version: " + this.state.version);
             let matches = e("p", {}, "Matches: " + JSON.stringify(this.state.matches));
-            return e("div", {}, "Text to check:", input, "Engine:", engine, btn, fixed, version, matches);
+            let timings = e("p", {}, "Timings: " + this.state.timings);
+            return e("div", {}, "Text to check:", input, "Engine:", engine, btn, fixed, version, matches, timings);
         }
     }
 
