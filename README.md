@@ -67,6 +67,7 @@ Let's use **word level F1-score** for all comparisons.
 | FullStop            | 0.757   | 0.723    | 0.623     | 0.648 |
 | Comma DistilRoBERTa | 0.846   | 0.824    | 0.826     | 0.827 |
 | Comma RoBERTa       | 0.868   | 0.851    | 0.864     | 0.862 |
+
 Table 1. Word level F1-scores
 
 More details in notebooks: [quality/evaluation](https://github.com/nazarov-yuriy/ugramm/tree/main/quality/evaluation)
