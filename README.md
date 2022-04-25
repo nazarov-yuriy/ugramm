@@ -3,6 +3,21 @@
 
 ![Screenshot](https://github.com/nazarov-yuriy/ugramm/raw/main/docs/img/demo.png)
 
+# Deployment
+### Run
+```bash
+cd service && docker-compose up
+```
+
+### Build & Run
+```bash
+PREFIX=firefish  # update docker-compose.yml if changed
+cd service
+cd third_party && docker build -t "$PREFIX/languagetool:5.7.0" . && cd ..
+cd backend && docker build -t "$PREFIX/ugramm:0.2" . && cd ..
+docker-compose up
+```
+
 # Task
 The task is to suggest where to place commas in a given text.
 
