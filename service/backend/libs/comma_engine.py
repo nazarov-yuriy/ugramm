@@ -1,4 +1,5 @@
 from abc import ABC
+from datasets import load_metric
 from functools import lru_cache
 import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification, RobertaTokenizer
@@ -55,6 +56,40 @@ class CommaBase(BaseEngine, ABC):
                 ))
         res.fill_fixed(text)
         return res
+
+    @staticmethod
+    def _pad(matrix):
+        max_len = max(len(row) for row in matrix)
+        for row in matrix:
+            row.extend([0] * (max_len - len(row)))
+
+    def evaluate(self, texts, batch_size=64) -> dict:
+        tokenizer = self._get_tokenizer()
+        model = self._get_model()
+        metric = load_metric("seqeval")
+        word_preds = []
+
+        for offset in range(0, len(texts), batch_size):
+            batch = texts[offset:offset + batch_size]
+            words_without_comma = [[word.replace(",", "") for word in text.split(" ")] for text in batch]
+            tokens = tokenizer(words_without_comma, truncation=True, is_split_into_words=True)
+            self._pad(tokens["input_ids"])
+            self._pad(tokens["attention_mask"])
+            batch_pred = model.forward(
+                input_ids=torch.tensor(tokens['input_ids']), attention_mask=torch.tensor(tokens['attention_mask']))
+            batch_pred = torch.argmax(batch_pred.logits.squeeze(), axis=-1)  # noqa
+
+            for i in range(len(batch)):
+                word_ids = tokens.word_ids(batch_index=i)
+                word_preds.append([self.label_list[0] for _ in words_without_comma[i]])
+                for pred, word_id in zip(batch_pred[i].numpy(), word_ids):
+                    if word_id is not None and pred != 0:
+                        word_preds[-1][word_id] = self.label_list[pred]
+        labels = [
+            [self.COMMA if "," in token else self.DEFAULT for token in text.split(" ")]
+            for text in texts
+        ]
+        return metric.compute(predictions=word_preds, references=labels)
 
 
 class CommaDistilRoberta(CommaBase):

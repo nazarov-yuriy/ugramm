@@ -9,6 +9,10 @@ import tarfile
 class TestCommaEngine(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
+        # Download test data
+        if not os.path.exists("test.txt"):
+            wget.download("https://storage.yandexcloud.net/jbos/test.txt")
+
         # Download models if needed
         engine = CommaRoberta()
         if not os.path.exists(engine.model_path):
@@ -57,3 +61,22 @@ class TestCommaEngine(unittest.TestCase):
                    '"rule": null, "start": 9}, {"length": 0, "message": null, "quickfix": ",", "rule": null, ' \
                    '"start": 57}], "version": "comma_distil_roberta 0.1"}'
         self.assertEqual(json_text, expected)
+
+    def test_metrics_roberta(self):
+        engine = CommaRoberta()
+        with open("test.txt", "r") as f:
+            texts = f.read().splitlines()
+        res = engine.evaluate(texts[::100])
+        print(res)
+        self.assertTrue(res['overall_f1'] >= 0.84)
+        self.assertTrue(res['overall_recall'] >= 0.84)
+        self.assertTrue(res['overall_precision'] >= 0.85)
+
+    def test_metrics_distilroberta(self):
+        engine = CommaDistilRoberta()
+        with open("test.txt", "r") as f:
+            texts = f.read().splitlines()
+        res = engine.evaluate(texts[::100])
+        self.assertTrue(res['overall_f1'] >= 0.79)
+        self.assertTrue(res['overall_recall'] >= 0.77)
+        self.assertTrue(res['overall_precision'] >= 0.8)
