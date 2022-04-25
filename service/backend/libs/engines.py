@@ -19,6 +19,9 @@ class EngineFactory:
         }
         self.cache = {}
 
+    def get_list(self):
+        return list(self.engines)
+
     def get_engine(self, name: str) -> BaseEngine:
         if name not in self.cache:
             if name in self.engines:
