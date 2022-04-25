@@ -61,12 +61,12 @@ On different scales:
 Let's use **word level F1-score** for all comparisons. 
 
 ### Systems performance
-| Model \ Test set    | Tatoeba | OSS Docs | Gutenberg | Total |
-|---------------------|---------|----------|-----------|-------|
-| NeMo BERT           | 0.805   | 0.701    | 0.636     | 0.655 |
-| FullStop            | 0.757   | 0.723    | 0.623     | 0.648 |
-| Comma DistilRoBERTa | 0.846   | 0.824    | 0.826     | 0.827 |
-| Comma RoBERTa       | 0.868   | 0.851    | 0.864     | 0.862 |
+| Model \ Test set   | Tatoeba   | OSS Docs  | Gutenberg | Total     |
+|--------------------|-----------|-----------|-----------|-----------|
+| NeMo BERT          | 0.805     | 0.701     | 0.636     | 0.655     |
+| FullStop           | 0.757     | 0.723     | 0.623     | 0.648     |
+| Ours DistilRoBERTa | 0.846     | 0.824     | 0.826     | 0.827     |
+| Ours RoBERTa       | **0.868** | **0.851** | **0.864** | **0.862** |
 
 Table 1. Word level F1-scores
 
