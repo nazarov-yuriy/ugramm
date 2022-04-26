@@ -5,7 +5,10 @@ import os
 from libs.comma_engine import CommaRoberta, CommaDistilRoberta
 import tarfile
 
+SKIP_SLOW = int(os.getenv("SKIP_SLOW", "0"))
 
+
+@unittest.skipIf(SKIP_SLOW, "slow")
 class TestCommaEngine(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
