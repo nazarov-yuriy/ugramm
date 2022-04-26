@@ -1,7 +1,12 @@
 from abc import ABC
 from functools import lru_cache
-from nemo.collections.nlp.models import PunctuationCapitalizationModel
-from .base_engine import BaseEngine, CheckResult, Match
+import logging
+
+logging.disable(logging.CRITICAL)  # to mute nemo
+from nemo.collections.nlp.models import PunctuationCapitalizationModel  # noqa
+
+logging.disable(logging.NOTSET)
+from .base_engine import BaseEngine, CheckResult, Match  # noqa
 
 
 class NemoBase(BaseEngine, ABC):
