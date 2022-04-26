@@ -1,6 +1,6 @@
 services:
   backend:
-    image: firefish/ugramm:0.2
+    image: firefish/ugramm:0.3
     ports:
       - "80:5000"
     networks:
