@@ -83,3 +83,13 @@ class TestCommaEngine(unittest.TestCase):
         self.assertTrue(res['overall_f1'] >= 0.79)
         self.assertTrue(res['overall_recall'] >= 0.77)
         self.assertTrue(res['overall_precision'] >= 0.8)
+
+    def test_large_text_roberta(self):
+        engine = CommaRoberta()
+        text = "Hello world.\n" * 4096
+        engine.check(text)
+
+    def test_large_text_distilroberta(self):
+        engine = CommaDistilRoberta()
+        text = "Hello world.\n" * 4096
+        engine.check(text)
