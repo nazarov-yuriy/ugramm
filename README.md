@@ -9,14 +9,21 @@
 cd service && docker-compose up
 ```
 
-### Build & Run
+### Test & Build & Run
+On Ubuntu 20.04
 ```bash
 PREFIX=firefish  # update docker-compose.yml if changed
+sudo apt install -y python3 python3-pip libmecab-dev
+pip install flake8 pytest
+pip install -r service/backend/requirements.txt
+pytest
 cd service
 cd third_party && docker build -t "$PREFIX/languagetool:5.7.0" . && cd ..
 cd backend && docker build -t "$PREFIX/ugramm:0.2" . && cd ..
 docker-compose up
 ```
+See tests at [service/backend/test](https://github.com/nazarov-yuriy/ugramm/tree/main/service/backend/test)
+
 
 # Task
 The task is to suggest where to place commas in a given text.
@@ -58,7 +65,12 @@ On different scales:
 * word level
 * sentence level
 
-Let's use **word level F1-score** for all comparisons. 
+Let's use **word level F1-score** for all comparisons.
+
+### Models
+See model training in [quality/models](https://github.com/nazarov-yuriy/ugramm/tree/main/quality/models)
+
+Graphs at [Weights & Biases](https://wandb.ai/firefish/huggingface/runs/d2fn8fhs)
 
 ### Systems performance
 | Model \ Test set   | Tatoeba   | OSS Docs  | Gutenberg | Total     |
