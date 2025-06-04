@@ -2,10 +2,11 @@ flask==2.3.3
 flasgger==0.9.7.1
 requests==2.31.0
 wget==3.2
-datasets==2.14.7
-huggingface-hub==0.17.3
+datasets==3.6.0
+huggingface-hub==0.32.4
 language-tool-python==2.7.1
-tokenizers==0.14.1
+tokenizers==0.15.2
+evaluate==0.4.1
 torch==2.1.2
 transformers==4.35.2
 nemo-toolkit==2.3.1

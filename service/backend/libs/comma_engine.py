@@ -1,5 +1,8 @@
 from abc import ABC
-from datasets import load_metric
+try:
+    from datasets import load_metric  # <=2.x
+except Exception:  # pragma: no cover - removed in datasets>=3.0
+    from evaluate import load as load_metric
 from functools import lru_cache
 import torch
 from transformers import AutoTokenizer, AutoModelForTokenClassification, RobertaTokenizer
