@@ -3,7 +3,10 @@ from functools import lru_cache
 import logging
 
 logging.disable(logging.CRITICAL)  # to mute nemo
-from nemo.collections.nlp.models import PunctuationCapitalizationModel  # noqa
+try:
+    from nemo.collections.nlp.models import PunctuationCapitalizationModel  # noqa
+except Exception:  # pragma: no cover
+    PunctuationCapitalizationModel = None
 
 logging.disable(logging.NOTSET)
 from .base_engine import BaseEngine, CheckResult, Match  # noqa
@@ -15,6 +18,8 @@ class NemoBase(BaseEngine, ABC):
 
     @lru_cache
     def _get_model(self) -> PunctuationCapitalizationModel:
+        if PunctuationCapitalizationModel is None:
+            raise ImportError("nemo-toolkit is required for this feature")
         return PunctuationCapitalizationModel.from_pretrained(model_name=self.model_name)
 
     @staticmethod
